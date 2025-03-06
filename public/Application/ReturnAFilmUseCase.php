@@ -7,24 +7,25 @@ namespace Application;
 use Domain\Film;
 use Exception;
 use Exceptions\FilmIsRentedException;
+use Exceptions\FilmIsNotRentedException;
 use Exceptions\FilmNotFoundException;
 use Infrastructure\FilmRepository;
 
-final readonly class RentAFilmUseCase{
-    
+final readonly class ReturnAFilmUseCase{
+
     public function __construct(private FilmRepository $filmRepository)
     {
     }
 
     /** @throws Exception */
-    public function rentAFilm(string $filmTitle): void
+    public function returnAFilm(string $filmTitle): void
     {
         $film = $this->filmRepository->byTitle($filmTitle);
 
         $this->assertThatFilmExists($film);
         $this->assertThatFilmIsNotRented($film);
 
-        $film->setRent(true);
+        $film->setRent(false);
     }
 
     /**
@@ -38,12 +39,12 @@ final readonly class RentAFilmUseCase{
     }
 
     /**
-     * @throws FilmIsRentedException
+     * @throws FilmIsNotRentedException
      */
-    private function assertThatFilmIsNotRented(Film $film): void
-    {
-        if ($film->isRented()) {
-            throw new FilmIsRentedException();
+    private function assertThatFilmIsNotRented(Film $film): void{
+        
+        if ($film->isRented()===false) {
+            throw new FilmIsNotRentedException();
         }
     }
 }
