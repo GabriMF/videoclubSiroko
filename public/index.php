@@ -39,3 +39,7 @@ try{
 }catch(FilmNotFoundException|FilmIsNotRentedException $exception){
     echo $exception->getMessage();
 }
+
+
+?>
+
